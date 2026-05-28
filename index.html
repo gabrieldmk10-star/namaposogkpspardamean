@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namaposo GKPS Pardamean</title>
+    <!-- Menggunakan Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bg-gkps-blue { background-color: #0b2265; }
+        .text-gkps-blue { color: #0b2265; }
+        .border-gkps-blue { border-color: #0b2265; }
+        /* Indikator visual bahwa teks bisa diedit oleh admin */
+        .admin-editable:focus {
+            outline: 2px dashed #eab308;
+            background-color: #fef08a;
+            padding: 2px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- NAVIGATION BAR (Responsif Smartphone & Laptop) -->
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="gantiHalaman('home')">
+                <img src="logongkps.jpg" alt="Logo Namaposo GKPS Pardamean" class="w-10 h-10 md:w-12 md:h-12 object-contain rounded-full border border-gray-200">
+                <div>
+                    <span class="font-bold text-base md:text-lg block text-gkps-blue leading-none">NAMAPOSO</span>
+                    <span class="text-[10px] md:text-xs text-gray-500 font-medium">GKPS PARDAMEAN</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:space-x-6 font-medium text-xs sm:text-sm md:text-base items-center">
+                <button onclick="gantiHalaman('home')" id="nav-home" class="text-blue-600 transition font-bold px-1.5 py-1">Beranda</button>
+                <button onclick="gantiHalaman('tentang')" id="nav-tentang" class="hover:text-blue-600 transition px-1.5 py-1">Tentang & Program</button>
+                <button onclick="gantiHalaman('kegiatan')" id="nav-kegiatan" class="hover:text-blue-600 transition px-1.5 py-1">Kegiatan</button>
+                <button onclick="gantiHalaman('kontak')" id="nav-kontak" class="hover:text-blue-600 transition px-1.5 py-1">Kontak</button>
+                
+                <!-- Grup Tombol Autentikasi Admin -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="bukaLoginAdmin()" id="btn-login" class="bg-gkps-blue text-white px-3 py-1 rounded-md text-[11px] md:text-sm hover:bg-blue-800 transition shadow-sm">Login Admin</button>
+                    <button onclick="logoutAdmin()" id="btn-logout" class="hidden bg-red-600 text-white px-3 py-1 rounded-md text-[11px] md:text-sm hover:bg-red-700 transition shadow-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NOTIFIKASI MODE EDIT ADMIN -->
+    <div id="admin-banner" class="bg-yellow-500 text-white text-center py-2 px-4 fixed w-full top-[100px] md:top-[70px] z-40 font-bold text-xs md:text-sm hidden shadow-md">
+        ✍️ Mode Admin Aktif: Anda bisa langsung klik dan mengedit teks Tema, Sub-Tema, atau seluruh komponen Program Kerja di bawah ini.
+        <button onclick="simpanSemuaTeks()" class="ml-4 bg-blue-900 text-white px-3 py-0.5 rounded hover:bg-black transition">Simpan Perubahan Teks</button>
+    </div>
+
+
+    <!-- ================= HALAMAN 1: BERANDA & TEMA ================= -->
+    <div id="page-home" class="page-content pt-28 md:pt-20 flex-grow">
+        <header class="pt-8 pb-8 md:pt-12 md:pb-10 bg-gkps-blue text-white text-center px-4">
+            <div class="max-w-4xl mx-auto flex flex-col items-center">
+                <img src="logongkps.jpg" alt="Logo Besar GKPS" class="w-24 h-24 md:w-32 md:h-32 object-contain bg-white p-2 rounded-full shadow-xl mb-4 md:mb-6">
+                <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight mb-2 px-2">Namaposo GKPS Pardamean</h1>
+                <p class="text-xs md:text-lg text-blue-200 uppercase tracking-widest font-semibold mb-2">Wadah Persekutuan Pemuda-Pemudi</p>
+            </div>
+        </header>
+
+        <section class="py-8 md:py-12 bg-white px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-left">
+                    <div class="bg-blue-50 p-5 md:p-6 rounded-2xl border-l-4 border-gkps-blue shadow-sm">
+                        <span class="bg-gkps-blue text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Tema</span>
+                        <h3 id="txt-tema" class="admin-editable text-base md:text-lg font-bold text-gkps-blue mt-3 mb-2 italic leading-relaxed">"Gareja na Sari, Martangkupas, Janah Siboan Pasu-Pasu"</h3>
+                        <p id="txt-tema-ayat" class="admin-editable text-[11px] md:text-xs text-gray-500 font-semibold">(Parambilan 9: 10, Psalmen 1:3, Markus 4:26-29)</p>
+                    </div>
+                    <div class="bg-blue-50 p-5 md:p-6 rounded-2xl border-l-4 border-gkps-blue shadow-sm">
+                        <span class="bg-gkps-blue text-white text-[10px] md:text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Sub Tema</span>
+                        <h3 id="txt-subtema" class="admin-editable text-base md:text-lg font-bold text-gkps-blue mt-3 mb-2 italic leading-relaxed">"Gabe Gareja na Matoras Mambobai Kuria Gabe Angkula ni Kristus na Manggoluh"</h3>
+                        <p id="txt-subtema-ayat" class="admin-editable text-[11px] md:text-xs text-gray-500 font-semibold">(Hosea 6:3, Epesus 2:19-22, Heber 5:14)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- ================= HALAMAN 2: TENTANG KAMI, PENGURUS & PROGRAM KERJA ================= -->
+    <div id="page-tentang" class="page-content pt-32 md:pt-24 flex-grow hidden">
+        <section class="py-8 md:py-12 px-4 max-w-6xl mx-auto">
+            <div class="text-center mb-8 md:mb-12">
+                <h2 class="text-2xl md:text-3xl font-bold text-gkps-blue mb-2">Tentang Namaposo</h2>
+                <div class="w-12 h-1 bg-gkps-blue mx-auto mb-4"></div>
+                
+                <button id="btnKelolaPengurus" onclick="bukaModalPengurus()" class="hidden bg-yellow-500 text-white text-xs md:text-sm px-4 py-2 rounded-full font-bold shadow hover:bg-yellow-600 transition mx-auto">⚙️ Kelola Pengurus & Foto</button>
+            </div>
+
+            <div class="mb-12 md:mb-16">
+                <h3 class="text-xl md:text-2xl font-bold text-gkps-blue text-center mb-6 md:mb-8 px-2">Struktur Kepengurusan Jemaat (Periode 2026-2029)</h3>
+                
+                <div class="mb-10">
+                    <h4 class="text-center font-bold text-gray-400 uppercase tracking-wider text-xs mb-4">— Pengurus Inti —</h4>
+                    <div id="container-inti" class="flex flex-wrap justify-center gap-4 md:gap-6 px-2"></div>
+                </div>
+
+                <div>
+                    <h4 class="text-center font-bold text-gray-400 uppercase tracking-wider text-xs mb-4">— Koordinator Seksi —</h4>
+                    <div id="container-seksi" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-2"></div>
+                </div>
+            </div>
+
+            <!-- CONTAINER DOKUMEN PROGRAM KERJA -->
+            <div class="border-t pt-8 md:pt-12">
+                <h3 class="text-xl md:text-2xl font-bold text-gkps-blue text-center mb-6 md:mb-10">Program Kerja Seksi Namaposo</h3>
+                
+                <div id="container-program-kerja" class="admin-editable space-y-6 md:space-y-8 max-w-5xl mx-auto text-left px-2">
+                    
+                    <!-- II. BIDANG PERSEKUTUAN -->
+                    <div class="bg-white p-5 md:p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h4 class="text-lg md:text-xl font-bold text-gkps-blue mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">⛪</span> II. BIDANG PERSEKUTUAN
+                        </h4>
+                        <div class="space-y-5 text-xs md:text-sm text-gray-700">
+                            <div>
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">2.1 Kebaktian Minggu</strong>
+                                <p class="text-gray-500 italic mb-2">Dasar Pemikiran & Tujuan: Setiap namaposo perlu aktif dalam semua kegiatan di jemaat untuk melatih kepribadian serta meningkatkan iman dalam kebaktian minggu.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Mengikuti Ibadah Kebaktian Minggu Berbahasa Simalungun dan Ibadah Kebaktian Minggu Berbahasa Indonesia (KMBI) yang diadakan pada minggu keempat setiap bulannya bertempat di GKPS Pardamean.</li>
+                                    <li>Mengadakan latihan untuk pelayan acara serta jam doa untuk KMBI, bertempat di GKPS Pardamean.</li>
+                                    <li>Ibadah KMBI dilakukan dalam 2 sesi, yaitu pukul 07.30 WIB dan 10.00 WIB, serta mempersembahkan Koor/Vg di ibadah sesi II.</li>
+                                    <li>Mengadakan evaluasi perangkat acara setelah selesai ibadah KMBI dilanjut dengan perayaan ulang tahun anggota namaposo per bulan.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Kebaktian Minggu Berbahasa Indonesia dan seluruh namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">2.2 Kebaktian Partonggoan</strong>
+                                <p class="text-gray-500 italic mb-2">Dasar Pemikiran & Tujuan: Sebagai benteng dan tolak ukur bertindak dari pengaruh lingkungan, menjalin kebersamaan, meningkatkan persaudaraan, serta memperdalam iman.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Kebaktian Partonggoan Namaposo diadakan setiap Minggu malam sekali dalam 2 minggu bertempat di GKPS Pardamean atau di rumah anggota jemaat namaposo.</li>
+                                    <li>Mengadakan latihan partonggoan setiap Minggu sore bertempat di gereja untuk MC, paragenda, dan pemusik.</li>
+                                    <li>Mempersiapkan pengkhotbah dari luar jemaat sebanyak 3 (tiga) kali dan 3 (tiga) kali dari Pendeta Resort Medan Timur.</li>
+                                    <li>Model ibadah disesuaikan dengan agenda GKPS yang menggunakan bahasa Indonesia dan bahasa Simalungun.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Kerohanian dan seluruh namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">2.3 Sakramen</strong>
+                                <p class="text-gray-500 italic mb-2">Dasar Pemikiran & Tujuan: Menumbuhkan kesadaran akan dosa serta menunjukkan kesetiaan pada perintah Tuhan sebagai wujud penerimaan penebusan-Nya.</p>
+                                <ul class="list-disc pl-5 text-gray-600">
+                                    <li>Mengikuti kegiatan Hari Besar Gerejawi (HBN) yang dilaksanakan di GKPS Pardamean dan GKPS Resort Medan Timur.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Majelis GKPS Pardamean dan dibantu namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">2.4 Koor dan Vocal Group</strong>
+                                <p class="text-gray-500 italic mb-2">Dasar Pemikiran & Tujuan: Memotivasi memuji Tuhan melalui kidung pujian, mengembangkan talenta, serta meningkatkan kualitas pujian.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Mengadakan latihan koor atau vocal group setiap hari Sabtu pukul 20.00 WIB di gereja GKPS Pardamean.</li>
+                                    <li>Mengusahakan mempelajari lagu-lagu baru pada saat kegiatan latihan koor dilaksanakan.</li>
+                                    <li>Mengadakan persembahan koor atau vocal grup setiap akhir bulan (KMBI), ulang tahun namaposo, pesta namaposo, dan acara-acara besar di gereja.</li>
+                                    <li>Berpartisipasi dengan mengikuti kegiatan terkait koor atau vocal grup yang diprogramkan di tingkat resort, distrik, dan pusat.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Koor dan seluruh namaposo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- III. BIDANG KESAKSIAN -->
+                    <div class="bg-white p-5 md:p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h4 class="text-lg md:text-xl font-bold text-gkps-blue mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">📢</span> III. BIDANG KESAKSIAN
+                        </h4>
+                        <div class="space-y-5 text-xs md:text-sm text-gray-700">
+                            <div>
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">3.1 Perayaan Paskah</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Melalui Kebangkitan Yesus, Namaposo merasakan penebusan dosa dan memaknai Karya Keselamatan Tuhan Yesus.</p>
+                                <ul class="list-disc pl-5 text-gray-600">
+                                    <li>Melaksanakan Ibadah Kebaktian Paskah Namaposo pada saat Paskah Tuntunan bertempat di GKPS Pardamean.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Kerohanian dan PNJ.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">3.2 Kunjungan Gereja dan Kunjungan Kasih</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Meneruskan pelayanan sebagai Regenerasi Gereja, menjalin kebersamaan sesuai Tri Tugas Panggilan Gereja.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Melaksanakan kunjungan gereja ke salah satu GKPS.</li>
+                                    <li>Melaksanakan aksi kasih melalui kunjungan kasih ke salah satu panti asuhan.</li>
+                                    <li>Waktu pelaksanaan ditentukan kemudian (menyusul).</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: PNJ and seluruh anggota namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">3.3 Perayaan Natal</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Merayakan kelahiran Tuhan Yesus Kristus agar tercermin Kasih Yesus di setiap kegiatan Namaposo.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Membentuk panitia natal tahun 2026.</li>
+                                    <li>Mengadakan kebaktian natal namaposo GKPS Pardamean pada tanggal 5 Desember 2026 bertempat di GKPS Pardamean.</li>
+                                    <li>Mengikuti Ibadah Malam Natal 24 Desember 2026 dan Ibadah Natal Umum 25 Desember 2026 bertempat di GKPS Pardamean.</li>
+                                    <li>Menghadiri undangan natal seksi kategorial di GKPS Pardamean maupun di gereja lain.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Panitia Natal dan seluruh namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">HUT Namaposo ke 73</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Mensyukuri berdirinya Seksi Namaposo selama 73 Tahun di tengah-tengah GKPS serta meningkatkan peran dalam pelayanan.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Perayaan natal tuntunan dilanjutkan dengan perayaan ulang tahun.</li>
+                                    <li>Waktu pelaksanaan pada tanggal 26 Desember 2026 bertempat di GKPS Pardamean.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: PNJ dan seluruh namaposo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IV. BIDANG PELAYANAN -->
+                    <div class="bg-white p-5 md:p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h4 class="text-lg md:text-xl font-bold text-gkps-blue mb-4 border-b pb-2 flex items-center">
+                            <span class="mr-2">🤝</span> IV. BIDANG PELAYANAN
+                        </h4>
+                        <div class="space-y-5 text-xs md:text-sm text-gray-700">
+                            <div>
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">4.1 Pendidikan dan Pengajaran</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Memberikan semangat, bimbingan, dan arahan kepada siswa-siswi dalam mempersiapkan diri menghadapi Ujian Akhir Sekolah.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Mengadakan kebaktian partonggoan kepada siswa SD, SMP, SMA yang akan mengikuti ujian akhir semester dengan mengundang orang tua dan majelis (waktu pelaksanaan insidentil bertempat di GKPS Pardamean).</li>
+                                    <li>Turut berperan aktif dalam mengisi Majalah Dinding (Mading) gereja.</li>
+                                    <li>Memberikan penghargaan beasiswa/apresiasi kepada namaposo yang memiliki IP minimal 3,5 dan peringkat/Rangking 1, 2, atau 3 senilai Rp 150.000.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Kerohanian dan seluruh namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">4.2 Kunjungan Sosial</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Menjalin kebersamaan, rasa tanggung jawab, meningkatkan persaudaraan antar sesama namaposo dan jemaat dalam mutu pelayanan keluar.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Mengunjungi anggota jemaat atau anggota namaposo yang sedang sakit.</li>
+                                    <li>Menghadiri acara sukacita (pernikahan, wisuda, dll) maupun acara dukacita.</li>
+                                    <li>Memberikan pati-patian sewaktu melaksanakan kunjungan sosial senilai Rp 100.000.</li>
+                                    <li>Ikut mengambil bagian secara aktif dalam kegiatan Namaposo di tingkat Jemaat, Resort, maupun Distrik.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: PNJ, Bidang Humas, dan seluruh namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">4.3 Olahraga</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Meningkatkan rasa kebersamaan, kekompakan, dan kerja sama antar sesama namaposo melalui aktivitas fisik.</p>
+                                <ul class="list-disc pl-5 text-gray-600">
+                                    <li>Olahraga rutin berupa jogging, bulu tangkis, futsal, serta mengikuti pertandingan-pertandingan olahraga antar gereja.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Olahraga dan seluruh namaposo.</p>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <strong class="text-gray-900 text-sm md:text-base block mb-1">4.4 Admin</strong>
+                                <p class="text-gray-500 italic mb-2">Tujuan: Membuat konten kreatif yang melibatkan pengikut, membangun hubungan komunikasi, serta mempromosikan seluruh kegiatan namaposo.</p>
+                                <ul class="list-disc pl-5 space-y-1 text-gray-600">
+                                    <li>Admin bertugas menanggungjawabi pengelolaan penuh perihal akun media sosial resmi Namaposo GKPS Pardamean, seperti Instagram, Facebook, dan Email.</li>
+                                    <li>Memposting informasi kegiatan yang akan dan sedang dilakukan, seperti jadwal pelaksanaan Partonggoan, pelaksanaan latihan Vocal Group atau Koor, dan program lainnya.</li>
+                                    <li>Melaksanakan pengeditan, perekaman video atau foto kegiatan, serta membuat desain postingan untuk anggota yang berulang tahun, wisuda, dan ucapan hari penting lainnya.</li>
+                                </ul>
+                                <p class="text-[11px] font-semibold text-gkps-blue mt-2">Pelaksana: Bidang Admin dan PNJ.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- ================= HALAMAN 3: KEGIATAN RUTIN ================= -->
+    <div id="page-kegiatan" class="page-content pt-32 md:pt-24 flex-grow hidden">
+        <section class="py-8 md:py-12 bg-gray-100 px-4 min-h-[60vh]">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-8 md:mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gkps-blue mb-2">Kegiatan Rutin</h2>
+                    <div class="w-12 h-1 bg-gkps-blue mx-auto mb-4"></div>
+                    <button id="btnTambahKegiatan" onclick="bukaModalForm()" class="hidden bg-green-600 text-white text-xs md:text-sm px-5 py-2 rounded-full font-bold shadow hover:bg-green-700 transition mx-auto">➕ Tambah Kegiatan Baru</button>
+                </div>
+                <div id="container-kegiatan" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-2"></div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- ================= HALAMAN 4: KONTAK ================= -->
+    <div id="page-kontak" class="page-content pt-32 md:pt-24 flex-grow hidden">
+        <section class="py-12 md:py-16 px-4 max-w-3xl mx-auto text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-gkps-blue mb-2">Hubungi Kami</h2>
+            <div class="w-12 h-1 bg-gkps-blue mx-auto mb-6"></div>
+            <div class="flex flex-col sm:flex-row justify-center items-center font-medium px-2">
+                <a href="https://instagram.com/ngkpspardamean" target="_blank" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white text-sm px-6 py-3 rounded-full shadow-lg hover:opacity-90 transition w-full sm:w-auto">📸 Instagram: @ngkpspardamean</a>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- MODAL UPDATE DATA & FOTO PENGURUS -->
+    <div id="modalPengurus" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white p-5 md:p-6 rounded-2xl max-w-md w-full shadow-2xl my-auto">
+            <h3 class="text-lg md:text-xl font-bold text-gkps-blue mb-4">Update Data & Foto Pengurus</h3>
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 text-xs md:text-sm">
+                <div>
+                    <label class="block font-bold text-gray-700">Pilih Jabatan Kepengurusan</label>
+                    <select id="pg-jabatan" class="w-full mt-1 border border-gray-300 rounded-md p-2 bg-gray-50 text-xs md:text-sm">
+                        <option value="Ketua">Ketua</option>
+                        <option value="Wakil Ketua">Wakil Ketua</option>
+                        <option value="Sekretaris">Sekretaris</option>
+                        <option value="Wakil Sekretaris">Wakil Sekretaris</option>
+                        <option value="Bendahara">Bendahara</option>
+                        <option value="Anggota 1">Anggota 1</option>
+                        <option value="Anggota 2">Anggota 2</option>
+                        <option value="Seksi Koor">Seksi Koor</option>
+                        <option value="Seksi Humas">Seksi Humas</option>
+                        <option value="Seksi Olahraga">Seksi Olahraga</option>
+                        <option value="Seksi KMBI">Seksi KMBI</option>
+                        <option value="Seksi Pendidikan & Kerohanian">Seksi Pendidikan & Kerohanian</option>
+                        <option value="Seksi Admin">Seksi Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700">Nama Lengkap / Nama Koordinator</label>
+                    <input type="text" id="pg-nama" class="w-full mt-1 border border-gray-300 rounded-md p-2 text-xs md:text-sm" placeholder="Masukkan nama lengkap">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700">Upload Foto Baru</label>
+                    <input type="file" id="pg-foto" accept="image/*" class="w-full mt-1 text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-gkps-blue hover:file:bg-blue-100">
+                </div>
+                <div class="pt-2">
+                    <button type="button" onclick="hapusFotoPengurus()" class="w-full bg-red-100 text-red-700 font-semibold py-2 rounded-md hover:bg-red-200 transition text-xs">🗑️ Hapus Foto Saat Ini (Kembali ke Default)</button>
+                </div>
+            </div>
+            <div class="mt-5 flex justify-end space-x-2 border-t pt-3 text-xs md:text-sm">
+                <button onclick="tutupModalPengurus()" class="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400">Batal</button>
+                <button onclick="simpanPengurus()" class="bg-gkps-blue text-white px-4 py-2 rounded-md hover:bg-blue-800">Simpan Data</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL FORM TAMBAH KEGIATAN BARU (Mendukung Unggah Foto & Video) -->
+    <div id="modalForm" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white p-5 md:p-6 rounded-2xl max-w-md w-full shadow-2xl my-auto">
+            <h3 id="modalTitle" class="text-lg md:text-xl font-bold text-gkps-blue mb-4">Tambah Kegiatan Baru</h3>
+            <div class="space-y-4 text-xs md:text-sm max-h-[60vh] overflow-y-auto pr-2">
+                <div><label class="block font-medium text-gray-700">Icon Emoji</label><input type="text" id="formIcon" class="w-full mt-1 border border-gray-300 rounded-md p-2 text-xs md:text-sm" placeholder="Contoh: 📚"></div>
+                <div><label class="block font-medium text-gray-700">Nama Kegiatan</label><input type="text" id="formJudul" class="w-full mt-1 border border-gray-300 rounded-md p-2 text-xs md:text-sm" placeholder="Contoh: Latihan Musik"></div>
+                <div><label class="block font-medium text-gray-700">Waktu / Jadwal</label><input type="text" id="formJadwal" class="w-full mt-1 border border-gray-300 rounded-md p-2 text-xs md:text-sm" placeholder="Contoh: Setiap Minggu Sore"></div>
+                <div><label class="block font-medium text-gray-700">Deskripsi Singkat</label><textarea id="formDeskripsi" rows="3" class="w-full mt-1 border border-gray-300 rounded-md p-2 text-xs md:text-sm" placeholder="Tulis rincian kegiatan..."></textarea></div>
+                
+                <!-- INPUT UNTUK UNGGAH DOKUMENTASI MEDIA -->
+                <div>
+                    <label class="block font-bold text-gray-700">Upload Lampiran Media (Opsional)</label>
+                    <input type="file" id="formMedia" accept="image/*,video/*" class="w-full mt-1 text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-gkps-blue hover:file:bg-blue-100">
+                    <p class="text-[10px] text-gray-400 mt-1">Dapat berupa file Foto (.jpg, .png) atau rekaman dokumentasi Video (.mp4).</p>
+                </div>
+            </div>
+            <div class="mt-5 flex justify-end space-x-2 text-xs md:text-sm border-t pt-3">
+                <button onclick="tutupModalForm()" class="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400">Batal</button>
+                <button onclick="simpanKegiatan()" class="bg-gkps-blue text-white px-4 py-2 rounded-md hover:bg-blue-800">Simpan Kegiatan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gkps-blue text-white py-4 md:py-6 text-center text-xs border-t border-blue-900 mt-auto px-2">
+        <p>&copy; 2026 Namaposo GKPS Pardamean. All Rights Reserved.</p>
+    </footer>
+
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+    // ================= JAVASCRIPT ENGINE (TERBARU & LENGKAP) =================
+const pengurusDefault = {
+    "Ketua": { nama: "Febriyanti Dosmaria Purba", foto: "" },
+    "Wakil Ketua": { nama: "Divan Manasse Damanik", foto: "" },
+    "Sekretaris": { nama: "Rosa Angelica Saragih", foto: "" },
+    "Wakil Sekretaris": { nama: "Lia Fitriana Damanik", foto: "" },
+    "Bendahara": { nama: "Thesallonika Natalia Gurning", foto: "" },
+    "Anggota 1": { nama: "Ezra Novridayani Purba", foto: "" },
+    "Anggota 2": { nama: "Gabriel Damanik", foto: "" },
+    "Seksi Koor": { nama: "Shakila Vanessa Purba", foto: "" },
+    "Seksi Humas": { nama: "Manuel Carol Siagian", foto: "" },
+    "Seksi Olahraga": { nama: "Yoel Immanuel Damanik", foto: "" },
+    "Seksi KMBI": { nama: "Ananta Tri Anugerah Saragih", foto: "" },
+    "Seksi Pendidikan & Kerohanian": { nama: "Putri Adelcia Damanik", foto: "" },
+    "Seksi Admin": { nama: "Lora Br Damanik", foto: "" }
+};
+
+const kegiatanDefault = [
+    { icon: "📖", judul: "Partonggoan Namaposo", jadwal: "Sekali 2 Minggu", deskripsi: "Ibadah persekutuan rohani bergilir pemuda-pemudi di gereja atau rumah anggota.", media: "", mediaType: "" }
+];
+
+let isAdminLoggedIn = false;
+let editIndex = null; // Menyimpan indeks kegiatan yang sedang diedit (-1 atau null berarti tambah baru)
+
+function gantiHalaman(idHalaman) {
+    document.querySelectorAll('.page-content').forEach(h => h.classList.add('hidden'));
+    document.getElementById('page-' + idHalaman).classList.remove('hidden');
+    document.querySelectorAll('nav button').forEach(b => {
+        if(b.id.startsWith('nav-')) b.classList.remove('text-blue-600', 'font-bold');
+    });
+    const t = document.getElementById('nav-' + idHalaman);
+    if(t) t.classList.add('text-blue-600', 'font-bold');
+    window.scrollTo(0, 0);
+}
+
+function ambilData(key, fallback) {
+    let d = localStorage.getItem(key);
+    return d ? JSON.parse(d) : fallback;
+}
+
+function muatTeksDinamis() {
+    if(localStorage.getItem("gkps_txt_tema")) document.getElementById("txt-tema").innerHTML = localStorage.getItem("gkps_txt_tema");
+    if(localStorage.getItem("gkps_txt_tema_ayat")) document.getElementById("txt-tema-ayat").innerHTML = localStorage.getItem("gkps_txt_tema_ayat");
+    if(localStorage.getItem("gkps_txt_subtema")) document.getElementById("txt-subtema").innerHTML = localStorage.getItem("gkps_txt_subtema");
+    if(localStorage.getItem("gkps_txt_subtema_ayat")) document.getElementById("txt-subtema-ayat").innerHTML = localStorage.getItem("gkps_txt_subtema_ayat");
+    if(localStorage.getItem("gkps_txt_program_kerja")) document.getElementById("container-program-kerja").innerHTML = localStorage.getItem("gkps_txt_program_kerja");
+}
+
+function simpanSemuaTeks() {
+    if(!isAdminLoggedIn) return;
+    localStorage.setItem("gkps_txt_tema", document.getElementById("txt-tema").innerHTML);
+    localStorage.setItem("gkps_txt_tema_ayat", document.getElementById("txt-tema-ayat").innerHTML);
+    localStorage.setItem("gkps_txt_subtema", document.getElementById("txt-subtema").innerHTML);
+    localStorage.setItem("gkps_txt_subtema_ayat", document.getElementById("txt-subtema-ayat").innerHTML);
+    localStorage.setItem("gkps_txt_program_kerja", document.getElementById("container-program-kerja").innerHTML);
+    alert("Semua perubahan teks berhasil disimpan!");
+}
+
+function renderPengurus() {
+    const data = ambilData("gkps_pengurus_data", pengurusDefault);
+    const containerInti = document.getElementById("container-inti");
+    const containerSeksi = document.getElementById("container-seksi");
+    
+    containerInti.innerHTML = "";
+    containerSeksi.innerHTML = "";
+
+    const listInti = ["Ketua", "Wakil Ketua", "Sekretaris", "Wakil Sekretaris", "Bendahara", "Anggota 1", "Anggota 2"];
+    listInti.forEach(jabatan => {
+        let p = data[jabatan] || { nama: "Belum Diisi", foto: "" };
+        let imgHTML = p.foto ? `<img src="${p.foto}" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover mx-auto mb-2 border-2 border-gkps-blue">` : `<div class="w-16 h-16 md:w-20 md:h-20 bg-blue-100 rounded-full flex items-center justify-center text-lg md:text-xl mx-auto mb-2">👤</div>`;
+        
+        containerInti.innerHTML += `
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 w-[45%] sm:w-40 md:w-48 text-center flex flex-col justify-between">
+                <div>
+                    ${imgHTML}
+                    <h5 class="font-bold text-gray-800 text-xs md:text-sm line-clamp-2">${p.nama}</h5>
+                </div>
+                <p class="text-[10px] md:text-xs text-blue-600 font-semibold uppercase tracking-wider mt-2">${jabatan}</p>
+            </div>
+        `;
+    });
+
+    const listSeksi = ["Seksi Koor", "Seksi Humas", "Seksi Olahraga", "Seksi KMBI", "Seksi Pendidikan & Kerohanian", "Seksi Admin"];
+    listSeksi.forEach(jabatan => {
+        let p = data[jabatan] || { nama: "Belum Diisi", foto: "" };
+        let imgHTML = p.foto ? `<img src="${p.foto}" class="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover mx-auto mb-2 border">` : `<div class="w-14 h-14 md:w-16 md:h-16 bg-gray-100 rounded-full flex items-center justify-center text-base md:text-lg mx-auto mb-2">👥</div>`;
+        
+        containerSeksi.innerHTML += `
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center flex flex-col justify-center items-center">
+                ${imgHTML}
+                <p class="text-[10px] md:text-xs font-bold text-gkps-blue uppercase mb-1">${jabatan}</p>
+                <h5 class="font-bold text-gray-800 text-xs md:text-sm">${p.nama}</h5>
+            </div>
+        `;
+    });
+}
+
+function simpanPengurus() {
+    const jabatan = document.getElementById("pg-jabatan").value;
+    const nama = document.getElementById("pg-nama").value;
+    const fileFoto = document.getElementById("pg-foto").files[0];
+
+    if(!nama) { alert("Nama wajib diisi!"); return; }
+
+    let dataStorage = ambilData("gkps_pengurus_data", pengurusDefault);
+
+    function prosesSimpan(fotoBase64) {
+        dataStorage[jabatan] = {
+            nama: nama,
+            foto: fotoBase64 || (dataStorage[jabatan] ? dataStorage[jabatan].foto : "")
+        };
+        localStorage.setItem("gkps_pengurus_data", JSON.stringify(dataStorage));
+        alert("Data " + jabatan + " berhasil disimpan!");
+        tutupModalPengurus();
+        renderPengurus();
+    }
+
+    if(fileFoto) {
+        const reader = new FileReader();
+        reader.onloadend = function() { prosesSimpan(reader.result); };
+        reader.readAsDataURL(fileFoto);
+    } else {
+        prosesSimpan(null);
+    }
+}
+
+function hapusFotoPengurus() {
+    const jabatan = document.getElementById("pg-jabatan").value;
+    let dataStorage = ambilData("gkps_pengurus_data", pengurusDefault);
+    
+    if (dataStorage[jabatan]) {
+        dataStorage[jabatan].foto = "";
+        localStorage.setItem("gkps_pengurus_data", JSON.stringify(dataStorage));
+        alert("Foto untuk jabatan " + jabatan + " berhasil dihapus!");
+        tutupModalPengurus();
+        renderPengurus();
+    }
+}
+
+// FUNGSI UNTUK MERENDER DAFTAR KEGIATAN RUTIN
+function renderKegiatan() {
+    const list = ambilData("data_kegiatan_gkps", kegiatanDefault);
+    const c = document.getElementById("container-kegiatan");
+    c.innerHTML = "";
+    
+    list.forEach((item, index) => {
+        // Tombol Aksi Admin (Edit & Hapus)
+        let btnAdminHTML = isAdminLoggedIn ? `
+            <div class="mt-4 pt-2 border-t flex justify-end space-x-2">
+                <button onclick="bukaModalEditKegiatan(${index})" class="text-[11px] bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">Edit</button>
+                <button onclick="hapusKegiatan(${index})" class="text-[11px] bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition">Hapus</button>
+            </div>
+        ` : "";
+        
+        // Memeriksa Lampiran Media Foto atau Video
+        let mediaHTML = "";
+        if (item.media) {
+            if (item.mediaType === "video") {
+                mediaHTML = `<div class="mt-3 mb-2 rounded-lg overflow-hidden border bg-black"><video src="${item.media}" controls class="w-full max-h-48 object-contain"></video></div>`;
+            } else {
+                mediaHTML = `<div class="mt-3 mb-2 rounded-lg overflow-hidden border"><img src="${item.media}" alt="Dokumentasi ${item.judul}" class="w-full h-40 object-cover"></div>`;
+            }
+        }
+
+        c.innerHTML += `
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex flex-col justify-between">
+                <div>
+                    <div class="text-2xl mb-2">${item.icon}</div>
+                    <h3 class="font-bold text-sm md:text-base text-gray-800">${item.judul}</h3>
+                    <p class="text-[10px] md:text-xs text-blue-600 font-semibold mb-2">${item.jadwal}</p>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed">${item.deskripsi}</p>
+                    ${mediaHTML}
+                </div>
+                ${btnAdminHTML}
+            </div>`;
+    });
+}
+
+// MEMBUKA MODAL UNTUK TAMBAH BARU
+function bukaModalForm() {
+    editIndex = null; 
+    document.getElementById("modalTitle").innerText = "Tambah Kegiatan Baru";
+    document.getElementById("formIcon").value = "";
+    document.getElementById("formJudul").value = "";
+    document.getElementById("formJadwal").value = "";
+    document.getElementById("formDeskripsi").value = "";
+    document.getElementById("formMedia").value = "";
+    document.getElementById("modalForm").classList.remove("hidden");
+}
+
+// MEMBUKA MODAL UNTUK EDIT KEGIATAN YANG SUDAH ADA
+function bukaModalEditKegiatan(index) {
+    const listKegiatan = ambilData("data_kegiatan_gkps", kegiatanDefault);
+    const item = listKegiatan[index];
+    
+    if(!item) return;
+
+    editIndex = index; // Kunci index target yang akan diubah
+    document.getElementById("modalTitle").innerText = "Edit Data / Media Kegiatan";
+    document.getElementById("formIcon").value = item.icon || "📅";
+    document.getElementById("formJudul").value = item.judul || "";
+    document.getElementById("formJadwal").value = item.jadwal || "";
+    document.getElementById("formDeskripsi").value = item.deskripsi || "";
+    document.getElementById("formMedia").value = ""; // Reset input file (bisa diunggah ulang jika ingin ganti media)
+    
+    document.getElementById("modalForm").classList.remove("hidden");
+}
+
+// PROSES SIMPAN (DAPAT MENDETEKSI EDIT ATAUPUN TAMBAH BARU)
+function simpanKegiatan() {
+    const icon = document.getElementById("formIcon").value.trim() || "📅";
+    const judul = document.getElementById("formJudul").value.trim();
+    const jadwal = document.getElementById("formJadwal").value.trim();
+    const deskripsi = document.getElementById("formDeskripsi").value.trim();
+    const fileMedia = document.getElementById("formMedia").files[0];
+
+    if (!judul || !jadwal || !deskripsi) {
+        alert("Semua kolom input kegiatan wajib diisi!");
+        return;
+    }
+
+    let listKegiatan = ambilData("data_kegiatan_gkps", kegiatanDefault);
+
+    function eksekusiSimpan(mediaBase64, tipeData) {
+        const payload = {
+            icon: icon,
+            judul: judul,
+            jadwal: jadwal,
+            deskripsi: deskripsi,
+            // Jika tidak ada upload file baru saat edit, pertahankan file media lama
+            media: mediaBase64 || (editIndex !== null ? listKegiatan[editIndex].media : ""),
+            mediaType: tipeData || (editIndex !== null ? listKegiatan[editIndex].mediaType : "")
+        };
+
+        if (editIndex !== null) {
+            // Aksi Update / Edit data yang sudah ada
+            listKegiatan[editIndex] = payload;
+            alert("Perubahan data kegiatan berhasil disimpan!");
+        } else {
+            // Aksi Simpan data baru (Tambah Baru)
+            listKegiatan.push(payload);
+            alert("Kegiatan baru berhasil ditambahkan!");
+        }
+
+        localStorage.setItem("data_kegiatan_gkps", JSON.stringify(listKegiatan));
+        tutupModalForm();
+        renderKegiatan();
+    }
+
+    if (fileMedia) {
+        const jenisFile = fileMedia.type.split('/')[0]; // Hasil: 'image' atau 'video'
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            eksekusiSimpan(reader.result, jenisFile);
+        };
+        reader.readAsDataURL(fileMedia);
+    } else {
+        eksekusiSimpan(null, null);
+    }
+}
+
+function hapusKegiatan(index) {
+    if (confirm("Apakah Anda yakin ingin menghapus kegiatan ini?")) {
+        let listKegiatan = ambilData("data_kegiatan_gkps", kegiatanDefault);
+        listKegiatan.splice(index, 1);
+        localStorage.setItem("data_kegiatan_gkps", JSON.stringify(listKegiatan));
+        renderKegiatan();
+    }
+}
+
+function tutupModalForm() { document.getElementById("modalForm").classList.add("hidden"); }
+function bukaModalPengurus() { 
+    document.getElementById("pg-nama").value = "";
+    document.getElementById("pg-foto").value = "";
+    document.getElementById("modalPengurus").classList.remove("hidden"); 
+}
+function tutupModalPengurus() { document.getElementById("modalPengurus").classList.add("hidden"); }
+
+function bukaLoginAdmin() {
+    let password = prompt("Masukkan Password Akses Admin:");
+    if (password === "admin123") {
+        isAdminLoggedIn = true;
+        
+        document.querySelectorAll(".admin-editable").forEach(elemen => {
+            elemen.setAttribute("contenteditable", "true");
+        });
+
+        document.getElementById("admin-banner").classList.remove("hidden");
+        document.getElementById("btnKelolaPengurus").classList.remove("hidden");
+        document.getElementById("btnTambahKegiatan").classList.remove("hidden");
+        
+        document.getElementById("btn-login").classList.add("hidden");
+        document.getElementById("btn-logout").classList.remove("hidden");
+        
+        alert("Login Admin Berhasil! Silakan klik langsung pada bagian teks Program Kerja atau Tema untuk mengedit.");
+        renderKegiatan();
+    } else if (password !== null) { alert("Password Salah!"); }
+}
+
+function logoutAdmin() {
+    isAdminLoggedIn = false;
+    
+    document.querySelectorAll(".admin-editable").forEach(elemen => {
+        elemen.removeAttribute("contenteditable");
+    });
+
+    document.getElementById("admin-banner").classList.add("hidden");
+    document.getElementById("btnKelolaPengurus").classList.add("hidden");
+    document.getElementById("btnTambahKegiatan").classList.add("hidden");
+    
+    document.getElementById("btn-logout").classList.add("hidden");
+    document.getElementById("btn-login").classList.remove("hidden");
+    
+    alert("Anda telah berhasil logout dari mode admin.");
+    renderKegiatan();
+}
+
+window.onload = function() {
+    muatTeksDinamis();
+    renderPengurus();
+    renderKegiatan();
+};
+    </script>
+</body>
+</html>s
